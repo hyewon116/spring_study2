@@ -36,7 +36,7 @@ public class EmpController {
 		
 		List<EmpDTO> list = null;
 		
-		list = service.empList();
+		list = service.empList(); //EmpService 파일의 empList 메소드를 list에 담기 
 		
 		model.addAttribute("emp_dto_list", list);
  		
