@@ -12,6 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import kr.co.ictedu.util.dto.SearchDTO;
+
 @Controller
 @RequestMapping ( value = "/board/free")
 public class FreeBoardController {
@@ -20,6 +22,64 @@ public class FreeBoardController {
 		
 		@Autowired
 		private FreeBoardService service;
+		
+		/*
+		 * 핵심 메소드 목록 : final_list, update, updateForm, delete, detail, write, writeForm
+		 * 나머지는 연습용 : search1, search1Test, pagingList, list3, list2, list
+		 */
+		
+		@RequestMapping (value = "/final_list", method = RequestMethod.GET)
+		private String finalList( SearchDTO dto, String userWantPage, Model model ) {
+			if(userWantPage == null || userWantPage.equals("") ) userWantPage = "1";
+			
+			int totalCount = 0, startPageNum = 1, endPageNum = 10, lastPageNum = 1;
+			totalCount = service.searchListCount( dto ); //조회 조건에 따라 count를 가져오는 객체 //이전의 totalListCount는 그냥 freeboard의 모든 결과를 가져왔었음.
+			
+			if( totalCount > 10 ) {
+				lastPageNum = ( totalCount / 10 ) + ( totalCount % 10 > 0 ? 1 : 0 );
+			}
+			
+			if( userWantPage.length() >= 2 ) {//페이지 넘버(userwantpage)가 2자릿수 이상인 경우 ex.125 클릭 기준  
+				String frontNum = userWantPage.substring(0, userWantPage.length()-1); //125 -> 12
+				startPageNum = Integer.parseInt(frontNum) * 10 + 1; //12*10+1 = 121
+				endPageNum = (Integer.parseInt(frontNum) + 1) * 10; //12+1*10 = 130
+				
+				String backNum = userWantPage.substring(userWantPage.length()-1, userWantPage.length());
+				if (backNum.contentEquals("0")) { //120클릭하면 121~130으로 넘어가는 거 방지
+					startPageNum = startPageNum - 10; //121-10 = 111
+					endPageNum = endPageNum - 10; //130-10 = 120
+				}//if
+			}//if
+			if(endPageNum > lastPageNum) endPageNum = lastPageNum;//총 페이지가 13인데 20페이지까지 나오는 거 방지
+			
+			model.addAttribute("startPageNum", startPageNum);
+			model.addAttribute("endPageNum", endPageNum);
+			model.addAttribute("userWantPage", userWantPage);
+			model.addAttribute("lastPageNum", lastPageNum);
+			
+			dto.setLimitNum( (Integer.parseInt(userWantPage) -1) * 10 );//sql의 limit 함수 첫번째 자리에 넣을 값. ex. 11페이지의 첫번쨰 게시글 순서
+			List<FreeBoardDTO> list = null;
+			list = service.searchList( dto );//SearchDTO
+			model.addAttribute("list", list);
+			model.addAttribute("search_dto", dto);
+			
+			return "/board/free/list5";//jsp file name
+		}//finalList
+
+		@RequestMapping (value = "/search1_test", method = RequestMethod.GET)
+		public String search1Test( SearchDTO dto, Model model ) {
+			List<FreeBoardDTO> list = null;
+			list = service.search1Test( dto );
+			logger.info(list.toString());
+			model.addAttribute("list", list);
+			model.addAttribute("search_dto", dto);
+			return "/board/free/search1";//jsp file name
+		}//search1Test
+		
+		@RequestMapping (value = "/search1", method = RequestMethod.GET)
+		public String search1() {
+			return "/board/free/search1";//jsp file name
+		}//search1
 		
 		@RequestMapping ( value = "/list4", method = RequestMethod.GET )
 		private String pagingList ( Model model, String userWantPage ) {
@@ -37,7 +97,7 @@ public class FreeBoardController {
 			//userWantPage가 12인 경우, 아래쪽에 보이는 페이지 숫자는 11 12 13 14 15 16 17 18 19 20
 			//userWantPage가 27인 경우, 아래쪽에 보이는 페이지 숫자는 21 22 23 24 25 26 27 28 29 30
 			if(userWantPage.length() >= 2) { //userWantPage가 10보다 큰 경우 (=두자릿수)
-				String frontNum = userWantPage.substring(0, userWantPage.length()-1); //ex.15->5 잘리고 1만 남음, 26->6잘리고 2만 남음
+				String frontNum = userWantPage.substring(0, userWantPage.length()-1); //ex.15->5 잘리고 1만 남음, 26->6잘리고 2만 남음, 125->12
 				startPageNum = Integer.parseInt(frontNum) * 10 + 1; // ex. 1*10+1 = 11, 2*10+1 = 21
 				endPageNum = (Integer.parseInt(frontNum) + 1) * 10; // ex. (1+1)*10 = 20, (2+1)* 10 = 30 
 				

@@ -5,6 +5,58 @@
  
 <mapper namespace="FreeBoardMapper">
 
+	<select id="searchListCount" parameterType="kr.co.ictedu.util.dto.SearchDTO" resultType="int">
+	select count(board_no) cnt from freeboard 
+	<if test="searchOption != null and searchOption != '' 
+				and searchWord != null and searchWord != ''">
+		<choose>
+			<when test = "searchOption == 'title'">
+				where title like concat('%', #{searchWord}, '%')
+			</when>
+			<when test = "searchOption == 'writer'">
+				where writer like concat('%', #{searchWord}, '%')
+			</when>
+		</choose>
+	</if>
+	</select>
+	
+	<select id="searchList" parameterType="kr.co.ictedu.util.dto.SearchDTO" 
+									resultType="kr.co.ictedu.board.free.FreeBoardDTO">
+		select board_no, title, writer, write_date
+		from freeboard
+		<if test="searchOption != null and searchOption != '' 
+				and searchWord != null and searchWord != ''"> 
+			<choose>
+				<when test="searchOption == 'title'">
+					where title like concat('%', #{searchWord}, '%')			
+				</when>
+				<when test = "searchOption == 'writer'">
+					where title like concat('%', #{searchWord}, '%')
+				</when>	
+			</choose>
+		</if>
+		order by board_no desc
+		limit #{limitNum}, 10
+	</select>
+
+	<select id="search1Test" parameterType="kr.co.ictedu.util.dto.SearchDTO" 
+									resultType="kr.co.ictedu.board.free.FreeBoardDTO">
+	select board_no, title, writer, write_date 
+	from freeboard
+	<if test="searchOption != null and searchOption != '' 
+			and searchWord != null and searchWord != ''"> 
+		<choose>
+			<when test = "searchOption == 'title'">
+				where title like concat('%', #{searchWord}, '%')
+			</when>	
+			<when test = "searchOption == 'writer'">
+				where title like concat('%', #{searchWord}, '%')
+			</when>	
+		</choose>
+	</if> 
+								
+	</select>
+
 	<select id="pagingList" parameterType="int" resultType="kr.co.ictedu.board.free.FreeBoardDTO"> 
 	select board_no, title, writer, write_date from freeboard 
 	order by board_no desc

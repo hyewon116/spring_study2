@@ -61,7 +61,7 @@
 	<button type="button" id="write_btn"
 						class="btn btn-success float-right"> 글 저 장 </button>
 						
-	<a href="${pageContext.request.contextPath}/board/free/list">
+	<a href="${pageContext.request.contextPath}/board/free/final_list">
 		<button class="btn btn-warning"> 글 작성 취소 </button>
 	</a>	
 	<%@ include file="/WEB-INF/views/footer.jsp" %>	
@@ -101,7 +101,7 @@
 					, function(data, status) { //data - 서버가 보내주는 데이터, status - 통신 성공 여부
 						if(data >= 1) {
 							alert("게시글이 성공적으로 업로드되었습니다.");
-							location.href="${pageContext.request.contextPath}/board/free/list";
+							location.href="${pageContext.request.contextPath}/board/free/final_list";
 						} else if(data <= 0) {
 							alert("게시글 작성을 실패하였습니다.");
 						} else {

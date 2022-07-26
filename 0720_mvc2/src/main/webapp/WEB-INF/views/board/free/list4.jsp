@@ -39,11 +39,12 @@
 		</table>
 		<hr>
 		<hr>
-	<ul class="pagination"> <!-- 부트스트랩 디자인 적용 -->
 		
+	<ul class="pagination"> <!-- 부트스트랩 디자인 적용 -->
 		<c:if test="${startPageNum > 10}">
 			<li class="page-item">
-				<a class="page-link" href="${pageContext.request.contextPath}/board/free/list4?userWantPage=${startPageNum-1}">
+				<a class="page-link" 
+				href="${pageContext.request.contextPath}/board/free/list4?userWantPage=${startPageNum-1}">
 					Previous
 				</a>
 			</li>		
@@ -51,23 +52,24 @@
 		<c:forEach var="page_no" begin="${startPageNum}" end="${endPageNum}">
 			<c:choose>
 				<c:when test="${page_no == userWantPage}">
-					<li class="page-item">
-						<a class="page-link" href="#">${page_no}</a>
+					<li class="page-item active">
+						<a class="page-link">${page_no}</a>
 					</li>
 				</c:when>
-			<c:otherwise>
-				<li class="page-item">
-					<a class="page-link" href="${pageContext.request.contextPath}/board/free/list4?userWantPage=${page_no}">
-						${page_no}
-					</a>
-				</li>
-			</c:otherwise>
+				<c:otherwise>
+					<li class="page-item">
+						<a class="page-link" 
+						href="${pageContext.request.contextPath}/board/free/list4?userWantPage=${page_no}">
+							${page_no}
+						</a>
+					</li>
+				</c:otherwise>
 			</c:choose>
 		</c:forEach>
-		
 		<c:if test="${lastPageNum > endPageNum}"> 
 			<li class="page-item">
-				<a class="page-link" href="${pageContext.request.contextPath}/board/free/list4?userWantPage=${endPageNum+1}">
+				<a class="page-link" 
+				href="${pageContext.request.contextPath}/board/free/list4?userWantPage=${endPageNum+1}">
 					Next
 				</a>	
 			</li>		
