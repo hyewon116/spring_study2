@@ -12,7 +12,13 @@
 						<a class="nav-link" href="${pageContext.request.contextPath}/board/free/list">자유 게시판</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Link 2</a>
+						<a class="nav-link" href="${pageContext.request.contextPath}/board/free/list2">List2</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="${pageContext.request.contextPath}/board/free/list3">List3</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="${pageContext.request.contextPath}/board/free/list4">PagingList</a>
 					</li>
 					
 					<!-- Dropdown -->

@@ -11,6 +11,18 @@ public class FreeBoardService {
 	@Autowired
 	private FreeBoardDAO dao;
 	
+	public List<FreeBoardDTO> pagingList( int limitNum ) {
+		List<FreeBoardDTO> list = null;
+		list = dao.pagingList(limitNum);
+		return list;
+	}
+	
+	public int totalListCount() {
+		int totalCount = 0;
+		totalCount = dao.totalListCount();
+		return totalCount;
+	}
+	
 	public int update( FreeBoardDTO dto) {
 		int successCount = 0;
 		successCount = dao.update(dto);

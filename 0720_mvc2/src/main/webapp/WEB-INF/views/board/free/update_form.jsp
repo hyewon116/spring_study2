@@ -11,7 +11,6 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="//cdn.ckeditor.com/4.19.0/full/ckeditor.js"></script>
 		<style type="text/css">
-		
 		.write_label {
 			font-size: 0.7em; 
 			color: red;

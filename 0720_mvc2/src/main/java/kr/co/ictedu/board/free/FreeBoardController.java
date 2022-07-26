@@ -21,6 +21,101 @@ public class FreeBoardController {
 		@Autowired
 		private FreeBoardService service;
 		
+		@RequestMapping ( value = "/list4", method = RequestMethod.GET )
+		private String pagingList ( Model model, String userWantPage ) {
+			if( userWantPage == null || userWantPage.equals("") ) userWantPage = "1";
+			int totalCount = 0, startPageNum = 1, endPageNum = 10, lastPageNum = 1;
+			totalCount = service.totalListCount();
+			
+			if( totalCount > 10 ) {
+				lastPageNum = ( totalCount / 10 ) + ( totalCount % 10 > 0 ? 1 : 0 ); //10으로 나눈 후 나머지가 있다면 1, 아니면 0을 더해라.
+			}
+			//페이징 일반 요소 끝
+			
+			//페이지 롤링
+			//userWantPage가 10보다 작거나 같으면, 화면에 보이는 페이지는 1 2 3 4 5 6 7 8 9 10
+			//userWantPage가 12인 경우, 아래쪽에 보이는 페이지 숫자는 11 12 13 14 15 16 17 18 19 20
+			//userWantPage가 27인 경우, 아래쪽에 보이는 페이지 숫자는 21 22 23 24 25 26 27 28 29 30
+			if(userWantPage.length() >= 2) { //userWantPage가 10보다 큰 경우 (=두자릿수)
+				String frontNum = userWantPage.substring(0, userWantPage.length()-1); //ex.15->5 잘리고 1만 남음, 26->6잘리고 2만 남음
+				startPageNum = Integer.parseInt(frontNum) * 10 + 1; // ex. 1*10+1 = 11, 2*10+1 = 21
+				endPageNum = (Integer.parseInt(frontNum) + 1) * 10; // ex. (1+1)*10 = 20, (2+1)* 10 = 30 
+				
+				String backNum = userWantPage.substring(userWantPage.length()-1, userWantPage.length()); //10 누를때 11로 넘어가는 거 방지
+				if(backNum.equals("0")) {
+					startPageNum = startPageNum - 10;
+					endPageNum = endPageNum -10;
+				}
+			}
+			
+			if(endPageNum > lastPageNum) {
+				endPageNum = lastPageNum;
+			}
+			
+			model.addAttribute("startPageNum", startPageNum);
+			model.addAttribute("endPageNum", endPageNum);
+			model.addAttribute("userWantPage", userWantPage);
+			model.addAttribute("lastPageNum", lastPageNum);
+			
+			int limitNum = ( Integer.parseInt(userWantPage) -1 ) * 10;
+			List<FreeBoardDTO> list = null;
+			list = service.pagingList(limitNum);
+			model.addAttribute("list", list);
+			//logger.info(list.toString());
+			
+			return "/board/free/list4";//jsp file name
+		}
+		
+		@RequestMapping ( value = "/list3", method = RequestMethod.GET )
+		public String list3( Model model, String userWantPage ) {
+			if ( userWantPage == null || userWantPage.equals("") ) userWantPage = "1"; //아무것도 클릭 안해도 1페이지가 클릭되어 있도록 설정
+			
+			int totalCount = 0;
+			totalCount = service.totalListCount();
+			int startPageNum = 1;
+			int endPageNum = 1;
+			if(totalCount > 10) { 
+				endPageNum = ( totalCount / 10 ) + ( totalCount % 10 > 0 ? 1 : 0 );
+			}
+			
+			model.addAttribute("startPageNum", startPageNum);
+			model.addAttribute("endPageNum", endPageNum);
+			model.addAttribute("userWantPage", userWantPage);
+			
+			return "/board/free/list3"; //jsp file name
+		}
+		
+		@RequestMapping ( value = "/list2", method = RequestMethod.GET )
+		public String list2( Model model ) {//목록 아래쪽의 페이징 정보만 리스팅해보자.
+			//한 페이지에 10건을 보여줄 때  : 한 페이지에 보여주는 게시물의 총 건수
+			//페이지 총 건수 - 예) 128건  
+			//리스팅 건수 - (128 / 10) + (128 % 10 > 0 ? 1 : 0) == 13 
+			int totalCount = 0; 
+			totalCount = service.totalListCount(); //페이지 총 건수 
+			
+			int startPageNum = 1;
+			int endPageNum = 1; 
+			if(totalCount > 10) { //한 페이지당 10건씩 했을때 나오는 페이지 수 
+				endPageNum = (totalCount / 10) + (totalCount % 10 > 0 ? 1 : 0);				
+			}
+			
+			model.addAttribute("startPageNum", startPageNum);
+			model.addAttribute("endPageNum", endPageNum);
+
+			return "/board/free/list2"; //jsp file name
+		}//list2
+		
+		@RequestMapping (value = "/list", method = RequestMethod.GET)
+		public String list(Model model) {
+			//dbms에서 게시판 전체를 select : FreeBoardService.list() -> FreeBoardDAO.list() 
+			// -> freeboard-mapper.xml(namespace:FreeBoardMapper.list) 
+			List<FreeBoardDTO> list = null;
+			list = service.list();
+			
+			model.addAttribute("list",list);
+			return "/board/free/list"; //list.jsp (view name) 호출
+		}//list
+		
 		@RequestMapping ( value="/update", method = RequestMethod.POST)
 		public void update( FreeBoardDTO dto, PrintWriter out ) {
 			//dbms에 게시글을  update : FreeBoardService.update(dto) -> FreeBoardDAO.update(dto) 
@@ -75,15 +170,4 @@ public class FreeBoardController {
 		public String writeForm() {
 			return "/board/free/write_form";//jsp 파일 이름
 		}//writeForm
-		
-		@RequestMapping (value = "/list", method = RequestMethod.GET)
-		public String list(Model model) {
-			//dbms에서 게시판 전체를 select : FreeBoardService.list() -> FreeBoardDAO.list() 
-			// -> freeboard-mapper.xml(namespace:FreeBoardMapper.list) 
-			List<FreeBoardDTO> list = null;
-			list = service.list();
-			
-			model.addAttribute("list",list);
-			return "/board/free/list"; //list.jsp (view name) 호출
-		}//list
 }

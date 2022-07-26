@@ -12,6 +12,18 @@ public class FreeBoardDAO {
 	@Autowired
 	private SqlSession sqlSession;
 	
+	public List<FreeBoardDTO> pagingList( int limitNum ) {
+		List<FreeBoardDTO> list = null;
+		list = sqlSession.selectList("FreeBoardMapper.pagingList", limitNum); //limitNum = mapper에 넘겨줄 값
+		return list;
+	}
+	
+	public int totalListCount() {
+		int totalCount = 0;
+		totalCount = sqlSession.selectOne("FreeBoardMapper.totalCount");//전체 건수 조회
+		return totalCount;
+	}//totalListCount
+	
 	public int update( FreeBoardDTO dto ) {
 		int successCount = 0;
 		successCount = sqlSession.update("FreeBoardMapper.update", dto);
