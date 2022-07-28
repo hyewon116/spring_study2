@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 		<div class="container">
-			<div >
+			<div>
 				<c:choose>
 					<c:when test="${login_info != null && login_info.mid != null}">
 						${login_info.mid}
@@ -10,7 +10,7 @@
 					</c:when>
 					<c:otherwise>
 						<a href="${pageContext.request.contextPath}/login_form"> LOGIN </a>
-						회원 가입
+						<a href="${pageContext.request.contextPath}/join/form"> JOIN </a>
 					</c:otherwise>
 				</c:choose>
 			</div>

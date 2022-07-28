@@ -22,7 +22,7 @@
 	
 	<select id="searchList" parameterType="kr.co.ictedu.util.dto.SearchDTO" 
 									resultType="kr.co.ictedu.board.free.FreeBoardDTO">
-		select board_no, title, writer, write_date
+		select board_no, title, writer, write_date, view_cnt
 		from freeboard
 		<if test="searchOption != null and searchOption != '' 
 				and searchWord != null and searchWord != ''"> 
@@ -41,7 +41,7 @@
 
 	<select id="search1Test" parameterType="kr.co.ictedu.util.dto.SearchDTO" 
 									resultType="kr.co.ictedu.board.free.FreeBoardDTO">
-	select board_no, title, writer, write_date 
+	select board_no, title, writer, write_date, view_cnt
 	from freeboard
 	<if test="searchOption != null and searchOption != '' 
 			and searchWord != null and searchWord != ''"> 
@@ -58,7 +58,7 @@
 	</select>
 
 	<select id="pagingList" parameterType="int" resultType="kr.co.ictedu.board.free.FreeBoardDTO"> 
-	select board_no, title, writer, write_date from freeboard 
+	select board_no, title, writer, write_date, view_cnt from freeboard 
 	order by board_no desc
 	limit #{limitNum}, 10
 	</select>
@@ -80,6 +80,11 @@
 	select board_no, title, writer, contents, write_date from freeboard
 	where board_no = #{board_no}
 	</select>
+	
+	<update id="incrementViewCnt">
+	update freeboard set view_cnt = view_cnt + 1
+	where board_no = #{board_no}
+	</update>
 
 	<insert id="write" parameterType="kr.co.ictedu.board.free.FreeBoardDTO"> 
 	insert into freeboard (title, writer, pwd, contents, write_date)
@@ -87,7 +92,7 @@
 	</insert>
 	
 	<select id="list" resultType="kr.co.ictedu.board.free.FreeBoardDTO"> 
-	SELECT board_no, title, writer, write_date FROM freeboard
+	SELECT board_no, title, writer, write_date, view_cnt FROM freeboard
 	</select>
 	
 </mapper>

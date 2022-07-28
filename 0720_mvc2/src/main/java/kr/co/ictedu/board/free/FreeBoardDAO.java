@@ -70,6 +70,10 @@ public class FreeBoardDAO {
 		return dto;
 	}//detail
 	
+	public void incrementViewCnt( String board_no ) {
+		sqlSession.update("FreeBoardMapper.incrementViewCnt", board_no);//조회수 
+	}//incrementViewCnt
+	
 	public int write(FreeBoardDTO dto) {
 		int successCount = 0;
 		successCount = sqlSession.insert("FreeBoardMapper.write", dto); //freeboard-mapper.xml의 namespace

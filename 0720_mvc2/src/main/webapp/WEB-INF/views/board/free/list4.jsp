@@ -19,7 +19,7 @@
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th> 글 번 호 </th>   <th> 제 목 </th>  <th> 작 성 자  </th>   <th> 작 성 일 </th>
+					<th> 글 번 호 </th>   <th> 제 목 </th>  <th> 작 성 자  </th>  <th> 조 회 수  </th>  <th> 작 성 일 </th>
 				</tr>
 			</thead>
 			<tbody>
@@ -32,6 +32,7 @@
 						 	</a>
 						 </td>
 						 <td>${dto.writer}</td>
+						 <td>${dto.view_cnt}</td>
 						 <td>${dto.write_date}</td>
 					</tr>
 				</c:forEach>
