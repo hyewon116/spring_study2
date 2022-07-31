@@ -16,13 +16,17 @@
 			</div>
 			<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 				<!-- Brand -->
-				<a class="navbar-brand" href="#">Logo</a>
+				<a class="navbar-brand" href="${pageContext.request.contextPath}/">HOME</a>
 				
 				<!-- Links -->
 				<ul class="navbar-nav">
 					<li class="nav-item">
 						<a class="nav-link" href="${pageContext.request.contextPath}/board/free/final_list">
 							자유 게시판 : Searching + Paging + List</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="${pageContext.request.contextPath}/board/member/list">
+							멤버 게시판 </a>
 					</li>
 
 					<!-- Dropdown -->
@@ -41,6 +45,19 @@
 								list4 : paging + link + list</a>
 							<a class="dropdown-item" href="${pageContext.request.contextPath}/board/free/search1">
 								search1 : search + list</a>
+						</div>
+					</li>
+					
+					
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+							조회 연습
+						</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="${pageContext.request.contextPath}/test/dong_code">
+								동 코드 조회 연습</a>
+							<a class="dropdown-item" href="${pageContext.request.contextPath}/test/dong_search">
+								연관 검색어 조회 연습</a>
 						</div>
 					</li>
 				</ul>
